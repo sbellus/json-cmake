@@ -34,7 +34,7 @@ Let assume that above JSON is stored in variable `jsonTest` in CMake. Then it ca
 ``` cmake
 sbeParseJson(example "${jsonTest}")
 
-# Now you can used parsed variables.
+# Now you can use parsed variables.
 foreach(var ${example})
     message("${var} = ${${var}}")
 endforeach()
