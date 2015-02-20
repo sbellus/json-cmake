@@ -43,7 +43,7 @@ endforeach()
 sbeClearJson(example)
 ```
 
-Macro `sbeParseJson` creates following variables and its values.
+Macro `sbeParseJson` creates following variables and its values (`variable name` = `value`).
 ```
 example.menu.header = SVG Viewer
 example.menu.items = 0;1;2;3;4;5;6;7
