@@ -12,21 +12,21 @@ JSON to parse:
     "header": "SVG Viewer",
     "items": [
         {"id": "Open"},
-	{"id": "OpenOld", "label": null },
+        {"id": "OpenOld", "label": null },
         {"id": "OpenNew", "label": "Open New"},
-	null,
+        null,
         {"id": "ZoomIn", "label": ["Zoom In", "Zoom At"] },
         {"id": "ZoomOut", 
-	       "label": 
-		 { 
-		 "short": ["zo", "zout"], 
-		 "long":"Zoom Out"
-		 }
-	},
+               "label": 
+	         { 
+	         "short": ["zo", "zout"], 
+	         "long":"Zoom Out"
+	         }
+    	},
         {"id": "OriginalView", "label": "Original View"},
-	null
+    	null
      ],
-	"elements" : ["one", "two", { "number":"three", "Desc": "Number" }, null ]
+    "elements" : ["one", "two", { "number":"three", "Desc": "Number" }, null ]
 }}
 ```
 
