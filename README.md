@@ -7,7 +7,7 @@ To clear created variables use nacro `sbeClearJson`.
 ### Example
 
 JSON to parse:
-```
+``` json
 {"menu": {
     "header": "SVG Viewer",
     "items": [
