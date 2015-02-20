@@ -1,13 +1,13 @@
-== JSON parser for CMake ==
+## JSON parser for CMake
 
 Module JSONParser.cmake contains macro `sbeParseJson` to parse given JSON string. 
 Macro fills given variable with list of all names in json string. For each name it creates variable and sets the value from json string.
 To clear created variables use nacro `sbeClearJson`.
 
-=== Example ===
+### Example
 
 JSON to parse:
-{{{
+```
 {"menu": {
     "header": "SVG Viewer",
     "items": [
@@ -28,10 +28,10 @@ JSON to parse:
      ],
 	"elements" : ["one", "two", { "number":"three", "Desc": "Number" }, null ]
 }}
-}}}
+```
 
 Let assume that above JSON is stored in variable `jsonTest` in CMake. Then it can be parsed with following lines of code.
-{{{
+``` cmake
 sbeParseJson(example "${jsonTest}")
 
 # Now you can used parsed variables.
@@ -41,10 +41,10 @@ endforeach()
 
 # When you are done, clean parsed variables
 sbeClearJson(example)
-}}}
+```
 
 Macro `sbeParseJson` creates following variables and its values.
-{{{
+```
 example.menu.header = SVG Viewer
 example.menu.items = 0;1;2;3;4;5;6;7
 example.menu.items[0].id = Open
@@ -71,5 +71,5 @@ example.menu.elements[1] = two
 example.menu.elements[2].number = three
 example.menu.elements[2].Desc = Number
 example.menu.elements[3] = null
-}}}
+```
 
