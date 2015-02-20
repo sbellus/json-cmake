@@ -43,16 +43,17 @@ macro(sbeParseJson prefix jsonString)
 endmacro()
 
 macro(sbeClearJson prefix)
-    foreach(var ${${prefix}})
-        unset(${var})
+    foreach(json_var ${${prefix}})
+        unset(${json_var})
     endforeach()
     
     unset(${prefix})
+    unset(json_var)
 endmacro()
 
 macro(sbePrintJson prefix)
-    foreach(var ${${prefix}})
-        message("${var} = ${${var}}")
+    foreach(json_var ${${prefix}})
+        message("${json_var} = ${${json_var}}")
     endforeach()
 endmacro()
 
