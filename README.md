@@ -32,7 +32,7 @@ JSON to parse:
 }}
 ```
 
-Let assume that above JSON is stored in variable `jsonTest` in CMake. Then it can be parsed with following lines of code.
+Let assume that above JSON is stored in variable `jsonTest` in CMake script. It can be parsed with following lines of code.
 ``` cmake
 sbeParseJson(example "${jsonTest}")
 
