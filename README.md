@@ -34,6 +34,8 @@ JSON to parse:
 
 Let assume that above JSON is stored in variable `jsonTest` in CMake script. It can be parsed with following lines of code.
 ``` cmake
+include(JSONParser.cmake)
+
 sbeParseJson(example "${jsonTest}")
 
 # Now you can use parsed variables.
@@ -49,29 +51,29 @@ Macro `sbeParseJson` creates following variables and its values (`variable name`
 ```
 example.menu.header = SVG Viewer
 example.menu.items = 0;1;2;3;4;5;6;7
-example.menu.items[0].id = Open
-example.menu.items[1].id = OpenOld
-example.menu.items[1].label = null
-example.menu.items[2].id = OpenNew
-example.menu.items[2].label = Open New
-example.menu.items[3] = null
-example.menu.items[4].id = ZoomIn
-example.menu.items[4].label = 0;1
-example.menu.items[4].label[0] = Zoom In
-example.menu.items[4].label[1] = Zoom At
-example.menu.items[5].id = ZoomOut
-example.menu.items[5].label.short = 0;1
-example.menu.items[5].label.short[0] = zo
-example.menu.items[5].label.short[1] = zout
-example.menu.items[5].label.long = Zoom Out
-example.menu.items[6].id = OriginalView
-example.menu.items[6].label = Original View
-example.menu.items[7] = null
+example.menu.items_0.id = Open
+example.menu.items_1.id = OpenOld
+example.menu.items_1.label = null
+example.menu.items_2.id = OpenNew
+example.menu.items_2.label = Open New
+example.menu.items_3 = null
+example.menu.items_4.id = ZoomIn
+example.menu.items_4.label = 0;1
+example.menu.items_4.label_0 = Zoom In
+example.menu.items_4.label_1 = Zoom At
+example.menu.items_5.id = ZoomOut
+example.menu.items_5.label.short = 0;1
+example.menu.items_5.label.short_0 = zo
+example.menu.items_5.label.short_1 = zout
+example.menu.items_5.label.long = Zoom Out
+example.menu.items_6.id = OriginalView
+example.menu.items_6.label = Original View
+example.menu.items_7 = null
 example.menu.elements = 0;1;2;3
-example.menu.elements[0] = one
-example.menu.elements[1] = two
-example.menu.elements[2].number = three
-example.menu.elements[2].Desc = Number
-example.menu.elements[3] = null
+example.menu.elements_0 = one
+example.menu.elements_1 = two
+example.menu.elements_2.number = three
+example.menu.elements_2.Desc = Number
+example.menu.elements_3 = null
 ```
 
