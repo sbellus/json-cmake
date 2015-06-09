@@ -224,15 +224,15 @@ macro(_sbeParseArray prefix)
         if("\"" STREQUAL "${json_char}")
             # simple value
             list(APPEND ${prefix} ${json_${json_ArrayNestingLevel}_arrayIndex})
-            _sbeParseValue(${prefix}[${json_${json_ArrayNestingLevel}_arrayIndex}])
+            _sbeParseValue(${prefix}_${json_${json_ArrayNestingLevel}_arrayIndex})
         elseif("{" STREQUAL "${json_char}")
             # object
             _sbeMoveToNextNonEmptyCharacter()
             list(APPEND ${prefix} ${json_${json_ArrayNestingLevel}_arrayIndex})
-            _sbeParseObject(${prefix}[${json_${json_ArrayNestingLevel}_arrayIndex}])
+            _sbeParseObject(${prefix}_${json_${json_ArrayNestingLevel}_arrayIndex})
         else()
             list(APPEND ${prefix} ${json_${json_ArrayNestingLevel}_arrayIndex})
-            _sbeParseReservedWord(${prefix}[${json_${json_ArrayNestingLevel}_arrayIndex}])
+            _sbeParseReservedWord(${prefix}_${json_${json_ArrayNestingLevel}_arrayIndex})
         endif()
         
         string(SUBSTRING ${json_string} ${json_index} 1 json_char)
