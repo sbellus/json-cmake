@@ -4,6 +4,8 @@ Module JSONParser.cmake contains macro `sbeParseJson` to parse given JSON string
 Macro fills given variable with list of all names in JSON string. For each name it creates variable and sets the value from JSON string.
 To clear created variables use macro `sbeClearJson`.
 
+> When JSON string to parse contains `\"` it has to be **escaped one more time**, because I guess, CMake removes the `\` when passing string to macro `sbeParseJson`. You can use `string(REPLACE "\\\"" "\\\\\"" jsonString "${jsonString}")` to do that.
+
 > **Module does not validate given JSON string. If given JSON is malformed, the macro gives unpredictable result.**
 
 ### Example
