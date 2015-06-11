@@ -6,10 +6,10 @@ endif()
 
 set(JSonParserGuard yes)
 
-macro(sbeParseJson prefix jsonString)
+macro(sbeParseJson prefix jsonStringVariableName)
     cmake_policy(PUSH)
 
-    set(json_string ${jsonString})    
+    set(json_string "${${jsonStringVariableName}}")
     string(LENGTH "${json_string}" json_jsonLen)
     set(json_index 0)
     set(json_AllVariables ${prefix})
@@ -135,7 +135,7 @@ macro(_sbeParseNameValue prefix)
         endif()
 
         if(json_inName)
-            # escapes remove
+            # remove escapes
             if("\\" STREQUAL "${json_char}")
                 math(EXPR json_index "${json_index} + 1")
                 if(NOT ${json_index} LESS ${json_jsonLen})
@@ -195,16 +195,20 @@ macro(_sbeParseValue prefix)
         endif()
                 
         if(json_inValue)
-            # escapes remove
+             # if " is escaped consume
             if("\\" STREQUAL "${json_char}")
                 math(EXPR json_index "${json_index} + 1")
                 if(NOT ${json_index} LESS ${json_jsonLen})
                     break()
                 endif()                
                 string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
+                if(NOT "\"" STREQUAL "${json_char}")
+                    # if it is not " then copy also escape character
+                    set(json_char "\\${json_char}")
+                endif()
             endif()      
               
-            set(json_value "${json_value}${json_char}")
+            _sbeAddEscapedCharacter("${json_char}")
         endif()
         
         # check if value starts
@@ -215,6 +219,10 @@ macro(_sbeParseValue prefix)
         math(EXPR json_index "${json_index} + 1")
     endwhile()
     
+endmacro()
+
+macro(_sbeAddEscapedCharacter char)
+    string(CONCAT json_value "${json_value}" "${char}")
 endmacro()
 
 macro(_sbeParseObject prefix)
