@@ -1,7 +1,7 @@
 ## JSON parser for CMake
 
-Module JSONParser.cmake contains macro `sbeParseJson` to parse JSON string stored in given variable. 
-Macro fills given variable with list of all names in JSON string. For each name it creates variable and sets the value from JSON string.
+Module JSONParser.cmake contains macro `sbeParseJson` to parse JSON string stored in given variable (second argument). 
+Macro fills given variable (first argument) with list of all names in JSON string. For each name it creates variable and sets the value from JSON string.
 To clear created variables use macro `sbeClearJson`.
 
 > **Module does not validate given JSON string. If given JSON is malformed, the macro gives unpredictable result.**
