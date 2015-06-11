@@ -10,8 +10,7 @@ macro(sbeParseJson prefix jsonString)
     cmake_policy(PUSH)
 
     set(json_string ${jsonString})    
-    
-    string(LENGTH ${json_string} json_jsonLen)
+    string(LENGTH "${json_string}" json_jsonLen)
     set(json_index 0)
     set(json_AllVariables ${prefix})
     set(json_ArrayNestingLevel 0)
@@ -60,7 +59,7 @@ endmacro()
 macro(_sbeParse prefix)
 
     while(${json_index} LESS ${json_jsonLen})
-        string(SUBSTRING ${json_string} ${json_index} 1 json_char)
+        string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
         
         if("\"" STREQUAL "${json_char}")    
             _sbeParseNameValue(${prefix})
@@ -73,7 +72,7 @@ macro(_sbeParse prefix)
         endif()
 
         if(${json_index} LESS ${json_jsonLen})
-            string(SUBSTRING ${json_string} ${json_index} 1 json_char)
+            string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
         else()
             break()
         endif()
@@ -91,19 +90,25 @@ macro(_sbeParseNameValue prefix)
     set(json_inName no)
 
     while(${json_index} LESS ${json_jsonLen})
-        string(SUBSTRING ${json_string} ${json_index} 1 json_char)
+        string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
         
         # check if name ends
         if("\"" STREQUAL "${json_char}" AND json_inName)
             set(json_inName no)
             _sbeMoveToNextNonEmptyCharacter()
-            string(SUBSTRING ${json_string} ${json_index} 1 json_char)
+            if(NOT ${json_index} LESS ${json_jsonLen})
+                break()
+            endif()                
+            string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
             set(json_newPrefix ${prefix}.${json_name})
             set(json_name "")
             
             if(":" STREQUAL "${json_char}")
                 _sbeMoveToNextNonEmptyCharacter()
-                string(SUBSTRING ${json_string} ${json_index} 1 json_char)
+                if(NOT ${json_index} LESS ${json_jsonLen})
+                    break()
+                endif()                
+                string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
 
                 if("\"" STREQUAL "${json_char}")    
                     _sbeParseValue(${json_newPrefix})
@@ -133,7 +138,10 @@ macro(_sbeParseNameValue prefix)
             # escapes remove
             if("\\" STREQUAL "${json_char}")
                 math(EXPR json_index "${json_index} + 1")
-                string(SUBSTRING ${json_string} ${json_index} 1 json_char)
+                if(NOT ${json_index} LESS ${json_jsonLen})
+                    break()
+                endif()                
+                string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
             endif()
         
             set(json_name "${json_name}${json_char}")
@@ -152,7 +160,7 @@ macro(_sbeParseReservedWord prefix)
     set(json_reservedWord "")
     set(json_end no)
     while(${json_index} LESS ${json_jsonLen} AND NOT json_end)
-        string(SUBSTRING ${json_string} ${json_index} 1 json_char)
+        string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
         
         if("," STREQUAL "${json_char}" OR "}" STREQUAL "${json_char}" OR "]" STREQUAL "${json_char}")
             set(json_end yes)
@@ -174,9 +182,9 @@ macro(_sbeParseValue prefix)
     set(json_inValue no)
     
     while(${json_index} LESS ${json_jsonLen})
-        string(SUBSTRING ${json_string} ${json_index} 1 json_char)
-        
-        # check if json_value ends
+        string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
+
+        # check if json_value ends, it is ended by "
         if("\"" STREQUAL "${json_char}" AND json_inValue)
             set(json_inValue no)
             
@@ -190,7 +198,10 @@ macro(_sbeParseValue prefix)
             # escapes remove
             if("\\" STREQUAL "${json_char}")
                 math(EXPR json_index "${json_index} + 1")
-                string(SUBSTRING ${json_string} ${json_index} 1 json_char)
+                if(NOT ${json_index} LESS ${json_jsonLen})
+                    break()
+                endif()                
+                string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
             endif()      
               
             set(json_value "${json_value}${json_char}")
@@ -219,7 +230,7 @@ macro(_sbeParseArray prefix)
     list(APPEND ${json_AllVariables} ${prefix})
 
     while(${json_index} LESS ${json_jsonLen})
-        string(SUBSTRING ${json_string} ${json_index} 1 json_char)
+        string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
         
         if("\"" STREQUAL "${json_char}")
             # simple value
@@ -235,7 +246,11 @@ macro(_sbeParseArray prefix)
             _sbeParseReservedWord(${prefix}_${json_${json_ArrayNestingLevel}_arrayIndex})
         endif()
         
-        string(SUBSTRING ${json_string} ${json_index} 1 json_char)
+        if(NOT ${json_index} LESS ${json_jsonLen})
+            break()
+        endif()
+        
+        string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
         
         if("]" STREQUAL "${json_char}")
             math(EXPR json_index "${json_index} + 1")
@@ -255,9 +270,11 @@ endmacro()
 
 macro(_sbeMoveToNextNonEmptyCharacter)
     math(EXPR json_index "${json_index} + 1")
-    string(SUBSTRING ${json_string} ${json_index} 1 json_char)
-    while(${json_char} MATCHES "[ \t\n\r]" AND ${json_index} LESS ${json_jsonLen})
-        math(EXPR json_index "${json_index} + 1")
-        string(SUBSTRING ${json_string} ${json_index} 1 json_char)
-    endwhile()
+    if(${json_index} LESS ${json_jsonLen})
+        string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
+        while(${json_char} MATCHES "[ \t\n\r]" AND ${json_index} LESS ${json_jsonLen})
+            math(EXPR json_index "${json_index} + 1")
+            string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
+        endwhile()
+    endif()
 endmacro()
