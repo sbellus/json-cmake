@@ -6,10 +6,10 @@ endif()
 
 set(JSonParserGuard yes)
 
-macro(sbeParseJson prefix jsonStringVariableName)
+macro(sbeParseJson prefix jsonString)
     cmake_policy(PUSH)
 
-    set(json_string "${${jsonStringVariableName}}")
+    set(json_string "${${jsonString}}")
     string(LENGTH "${json_string}" json_jsonLen)
     set(json_index 0)
     set(json_AllVariables ${prefix})
@@ -64,10 +64,10 @@ macro(_sbeParse prefix)
         if("\"" STREQUAL "${json_char}")    
             _sbeParseNameValue(${prefix})
         elseif("{" STREQUAL "${json_char}")
-            math(EXPR json_index "${json_index} + 1")
+            _sbeMoveToNextNonEmptyCharacter()
             _sbeParseObject(${prefix})
         elseif("[" STREQUAL "${json_char}")
-            math(EXPR json_index "${json_index} + 1")
+            _sbeMoveToNextNonEmptyCharacter()
             _sbeParseArray(${prefix})
         endif()
 
@@ -190,7 +190,7 @@ macro(_sbeParseValue prefix)
             
             set(${prefix} ${json_value})
             list(APPEND ${json_AllVariables} ${prefix})
-            math(EXPR json_index "${json_index} + 1")
+            _sbeMoveToNextNonEmptyCharacter()
             break()
         endif()
                 
@@ -218,7 +218,6 @@ macro(_sbeParseValue prefix)
         
         math(EXPR json_index "${json_index} + 1")
     endwhile()
-    
 endmacro()
 
 macro(_sbeAddEscapedCharacter char)
@@ -227,7 +226,7 @@ endmacro()
 
 macro(_sbeParseObject prefix)
     _sbeParse(${prefix})
-    math(EXPR json_index "${json_index} + 1")
+    _sbeMoveToNextNonEmptyCharacter()
 endmacro()
 
 macro(_sbeParseArray prefix)
@@ -239,7 +238,7 @@ macro(_sbeParseArray prefix)
 
     while(${json_index} LESS ${json_jsonLen})
         string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
-        
+
         if("\"" STREQUAL "${json_char}")
             # simple value
             list(APPEND ${prefix} ${json_${json_ArrayNestingLevel}_arrayIndex})
@@ -261,12 +260,12 @@ macro(_sbeParseArray prefix)
         string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
         
         if("]" STREQUAL "${json_char}")
-            math(EXPR json_index "${json_index} + 1")
+            _sbeMoveToNextNonEmptyCharacter()
             break()
         elseif("," STREQUAL "${json_char}")
             math(EXPR json_${json_ArrayNestingLevel}_arrayIndex "${json_${json_ArrayNestingLevel}_arrayIndex} + 1")            
         endif()
-
+                
         _sbeMoveToNextNonEmptyCharacter()
     endwhile()    
     
