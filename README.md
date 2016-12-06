@@ -44,6 +44,12 @@ foreach(var ${example})
     message("${var} = ${${var}}")
 endforeach()
 
+# when you want to access concreet JSON object, use the names in JSON, the array indexes for JSON object MUST be given after '_'
+# e.g if you want to store value of object 'id' of first element of array 'items' in object 'menu'
+set(FirstItemId ${example.menu.items_0.id})
+# e.g if you want to store 1-th element of array 'short' in object 'label' of 5-th element of array items in object menu 
+set(ShortLabel ${example.menu.items_5.label.short_0})
+
 # When you are done, clean parsed variables
 sbeClearJson(example)
 ```
