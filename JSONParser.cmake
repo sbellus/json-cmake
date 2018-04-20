@@ -187,10 +187,10 @@ macro(_sbeParseValue prefix)
             # attempt to gobble up to 128 bytes of string
             string(SUBSTRING "${json_string}" ${json_index} 128 try_gobble)
             # consume a piece of string we can just straight copy before encountering \ or "
-            string(REGEX MATCH "^[^\"\\\\]+" match_until_quote "${try_gobble}")
-            string(CONCAT json_value "${json_value}" "${gobble}")
-            string(LENGTH "${gobble}" gobble_length)
-            math(EXPR json_index "${json_index} + ${gobble_length}")
+            string(REGEX MATCH "^[^\"\\\\]+" simple_copy "${try_gobble}")
+            string(CONCAT json_value "${json_value}" "${simple_copy}")
+            string(LENGTH "${simple_copy}" copy_length)
+            math(EXPR json_index "${json_index} + ${copy_length}")
         endif()
 
         string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
