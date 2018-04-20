@@ -182,6 +182,17 @@ macro(_sbeParseValue prefix)
     set(json_inValue no)
     
     while(${json_index} LESS ${json_jsonLen})
+        # fast path for copying strings
+        if (json_inValue)
+            # attempt to gobble up to 128 bytes of string
+            string(SUBSTRING "${json_string}" ${json_index} 128 try_gobble)
+            # consume a piece of string we can just straight copy before encountering \ or "
+            string(REGEX MATCH "^[^\"\\\\]+" match_until_quote "${try_gobble}")
+            string(CONCAT json_value "${json_value}" "${gobble}")
+            string(LENGTH "${gobble}" gobble_length)
+            math(EXPR json_index "${json_index} + ${gobble_length}")
+        endif()
+
         string(SUBSTRING "${json_string}" ${json_index} 1 json_char)
 
         # check if json_value ends, it is ended by "
